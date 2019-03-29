@@ -34,7 +34,7 @@
     },
     "autoload": {
         "files": [
-            "src/Helpers/CBHelper.php"
+            "src/helpers/cb_helpers.php"
         ],
         "psr-4": {
           "Crocodicstudio\\Crudbooster\\": "src/"
