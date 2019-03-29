@@ -10,7 +10,6 @@ class FileController extends Controller
 {
     public function getPreview($one, $two = null, $three = null, $four = null, $five = null)
     {
-
         if ($two) {
             $fullFilePath = 'uploads'.DIRECTORY_SEPARATOR.$one.DIRECTORY_SEPARATOR.$two;
             $filename = $two;
@@ -34,14 +33,10 @@ class FileController extends Controller
         $fullStoragePath = storage_path('app/'.$fullFilePath);
         $lifetime = 31556926; // One year in seconds
 
-        
-
         if (! Storage::exists($fullFilePath)) {
-            abort(404);
+            return;
         }
 
-        $handler = new \Symfony\Component\HttpFoundation\File\File(storage_path('app/'.$fullFilePath));
-        
         $extension = strtolower(File::extension($fullStoragePath));
         $images_ext = config('crudbooster.IMAGE_EXTENSIONS', 'jpg,png,gif,bmp');
         $images_ext = explode(',', $images_ext);
@@ -73,11 +68,8 @@ class FileController extends Controller
             $imageFileSize = mb_strlen($imgRaw, '8bit') ?: 0;
         }
 
-        /**
-         * Prepare some header variables
-         */
+        $handler = new \Symfony\Component\HttpFoundation\File\File(storage_path('app/'.$fullFilePath));
         $file_time = $handler->getMTime(); // Get the last modified time for the file (Unix timestamp)
-
         $header_content_type = $handler->getMimeType();
         $header_content_length = ($imageFileSize) ?: $handler->getSize();
         $header_etag = md5($file_time.$fullFilePath);
